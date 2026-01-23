@@ -8,7 +8,10 @@ import { CreateUserDto, UserResponseDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 
-
+interface FindAllOptions {
+  search?: string;
+  role?: 'admin' | 'editor' | 'viewer';
+}
 
 @Injectable()
 export class UsersService {
@@ -46,19 +49,35 @@ export class UsersService {
     
   }
 
-  async findAll(): Promise<UserResponseDto[]> {
+  async findAll({ search, role }: FindAllOptions = {}) {
+    const where: any = {};
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        
+      ];
+    }
+
+    if (role) {
+      where.role = role;
+    }
+
     const users = await this.prisma.user.findMany({
+      where,
       select: {
         id: true,
-        email: true,
         name: true,
+        email: true,
         role: true,
         active: true,
         createdAt: true,
       },
       orderBy: { createdAt: 'desc' },
     });
-
+    if (!users || users.length === 0) {
+      throw new NotFoundException('No users found');
+    }
     return users;
   }
 
@@ -121,5 +140,38 @@ export class UsersService {
     return { message: 'User deleted successfully', data: deleted };
   }
 
+
+
+  // TOGGLE active STATUS
+  async toggleActive(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { active: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const updated = await this.prisma.user.update({
+      where: { id },
+      data: {
+        active: !user.active,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        active: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return updated;
+  }
+
+  
 
 }
