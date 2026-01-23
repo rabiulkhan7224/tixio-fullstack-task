@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service'; // adjust path
 import { CreateUserDto, UserResponseDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { FindUsersQueryDto, PaginatedUsers } from './dto/find-users-query.dto';
 
 interface FindAllOptions {
   search?: string;
@@ -49,36 +50,56 @@ export class UsersService {
     
   }
 
-  async findAll({ search, role }: FindAllOptions = {}) {
+async findAll(query: FindUsersQueryDto): Promise<PaginatedUsers> {
+    const { search, role, page = 1, limit = 10 } = query;
+
+    // Build where clause
     const where: any = {};
 
     if (search) {
-      where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        
-      ];
+      where.OR = [{ name: { contains: search, mode: 'insensitive' } }];
+      
     }
 
     if (role) {
       where.role = role;
     }
 
-    const users = await this.prisma.user.findMany({
-      where,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        active: true,
-        createdAt: true,
+    const skip = (page - 1) * limit;
+
+    const [total, data] = await Promise.all([
+      this.prisma.user.count({ where }),
+
+      this.prisma.user.findMany({
+        where,
+        skip,
+        take: limit,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          active: true,
+          createdAt: true,
+          // updatedAt: true, // optional
+        },
+        orderBy: { createdAt: 'desc' }, // or by id, name, etc.
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrevious: page > 1,
       },
-      orderBy: { createdAt: 'desc' },
-    });
-    if (!users || users.length === 0) {
-      throw new NotFoundException('No users found');
-    }
-    return users;
+    };
   }
 
   async findOne(id: string): Promise<UserResponseDto> {   
@@ -172,6 +193,6 @@ export class UsersService {
     return updated;
   }
 
-  
+
 
 }
