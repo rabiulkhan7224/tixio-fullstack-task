@@ -42,3 +42,12 @@ export class CreateUserDto {
   @IsNotEmpty()
   name: string;
 }
+
+
+
+export class UserResponseDto {
+  id: string;
+  email: string;
+  name: string | null;
+  
+}
