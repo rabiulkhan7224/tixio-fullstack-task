@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
+export enum Role {
+  ADMIN = 'admin',
+  EDITOR = 'editor',
+  VIEWER = 'viewer',
+}
 export class CreateUserDto {
   @ApiProperty({
     example: 'rabiul@example.com',
@@ -9,6 +14,20 @@ export class CreateUserDto {
   @IsEmail({}, { message: 'Invalid email format' })
   @IsNotEmpty()
   email: string;
+
+  //   default role is USER
+  @ApiProperty({
+    example: 'viewer',
+    description: 'role of the viewer',
+    required: false,
+    enum: Role,
+    default: Role.VIEWER,
+  })
+
+
+  @IsOptional()
+
+  role?: Role;
 
   @ApiProperty({
     example: 'StrongP@ss123',
