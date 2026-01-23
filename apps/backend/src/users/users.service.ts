@@ -9,10 +9,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { FindUsersQueryDto, PaginatedUsers } from './dto/find-users-query.dto';
 
-interface FindAllOptions {
-  search?: string;
-  role?: 'admin' | 'editor' | 'viewer';
-}
+
 
 @Injectable()
 export class UsersService {
@@ -53,7 +50,6 @@ export class UsersService {
 async findAll(query: FindUsersQueryDto): Promise<PaginatedUsers> {
     const { search, role, page = 1, limit = 10 } = query;
 
-    // Build where clause
     const where: any = {};
 
     if (search) {
@@ -81,14 +77,16 @@ async findAll(query: FindUsersQueryDto): Promise<PaginatedUsers> {
           role: true,
           active: true,
           createdAt: true,
-          // updatedAt: true, // optional
         },
-        orderBy: { createdAt: 'desc' }, // or by id, name, etc.
+        orderBy: { createdAt: 'desc' }, 
       }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
 
+    if(data.length === 0){
+      throw new NotFoundException('No users found matching ');
+    }
     return {
       data,
       meta: {
