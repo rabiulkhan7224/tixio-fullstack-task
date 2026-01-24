@@ -13,7 +13,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    const { email, password, name } = createUserDto;
+    const { email, password, name, role } = createUserDto;
 
   // 1. check for existing user
     const existing = await this.prisma.user.findUnique({ where: { email } });
@@ -27,6 +27,7 @@ export class UsersService {
         email,
         password: hashedPassword,
         name,
+        role,
       },
       select: {
         id: true,

@@ -26,6 +26,7 @@ export const getUsers = async (query: UsersQuery): Promise<PaginatedResponse<Use
 };
 
 export const createUser = async (payload: CreateUserPayload): Promise<User> => {
+
   const { data } = await axiosInstance.post<User>('/users', payload);
   return data;
 };

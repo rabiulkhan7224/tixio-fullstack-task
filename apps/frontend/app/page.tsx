@@ -74,6 +74,8 @@ const HomePage = () => {
                 id="search"
                 placeholder="Search by name "
                 className=""
+                value={search}
+                onChange={(e) => handleSearchChange(e.target.value)}
               />
             </div>
 
@@ -96,9 +98,9 @@ const HomePage = () => {
             <Button className="">Sort by Name</Button>
           </div>
           {/*  Dashboard user data layout  */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
           {/* Left Panel - Users List */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-2">
             <div className="bg-card border border-border rounded-lg p-4">
               <h2 className="text-lg font-semibold mb-4">Users</h2>
               <UserList
@@ -106,11 +108,12 @@ const HomePage = () => {
                 selectedUserId={selectedUserId}
                 onSelectUser={setSelectedUserId}
               />
+              
             </div>
           </div>
 
           {/* Right Panel - User Details */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-3">
             <UserDetails userId={selectedUserId} />
           </div>
         </div>

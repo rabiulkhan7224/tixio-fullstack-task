@@ -37,7 +37,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document, {
     swaggerOptions: {
       persistAuthorization: true,          
-      docExpansion: 'none',                
+      // docExpansion: 'none',                
       defaultModelsExpandDepth: -1,        
       tagsSorter: 'alpha',                 
       operationsSorter: 'alpha',           

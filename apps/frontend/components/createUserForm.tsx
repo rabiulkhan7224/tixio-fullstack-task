@@ -42,6 +42,8 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
   const role = watch('role');
 
   const onSubmit = (data: CreateUserFormData) => {
+   
+   
     mutate(data, {
       onSuccess: () => {
         toast.success('User created successfully');
@@ -120,20 +122,7 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
             <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
         )}
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-      <div>
+ <div>
         <label htmlFor="role" className="text-sm font-medium mb-2 block">
           Role
         </label>

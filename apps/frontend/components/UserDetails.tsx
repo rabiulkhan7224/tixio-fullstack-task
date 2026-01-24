@@ -5,6 +5,7 @@ import { RoleBadge } from './RoleBadge';
 import { UserSkeleton } from './UserSkeleton';
 import { ToggleActiveButton } from './ToggleActiveButton';
 import { useUser } from '@/hooks/useUser';
+import { useProfileTimer } from '@/hooks/useProfileTimer';
 
 interface UserDetailsProps {
   userId: string | null;
@@ -12,7 +13,7 @@ interface UserDetailsProps {
 
 export function UserDetails({ userId }: UserDetailsProps) {
   const { data: user, isLoading } = useUser(userId);
-//   const seconds = useProfileTimer(!!user);
+  const seconds = useProfileTimer(!!user);
 
   if (!userId) {
     return (
@@ -78,7 +79,7 @@ export function UserDetails({ userId }: UserDetailsProps) {
 
         <div>
           <p className="text-sm font-medium text-muted-foreground">Viewing profile for</p>
-          {/* <p className="text-sm">{seconds} {seconds === 1 ? 'second' : 'seconds'}</p> */}
+          <p className="text-sm">{seconds} {seconds === 1 ? 'second' : 'seconds'}</p>
         </div>
 
         <div className="pt-4">
