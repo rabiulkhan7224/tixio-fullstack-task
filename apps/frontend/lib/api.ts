@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { PaginatedResponse, User, UsersQuery } from "./types/users";
+import { CreateUserPayload, PaginatedResponse, User, UsersQuery } from "./types/users";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
 
@@ -22,6 +22,11 @@ export const getUsers = async (query: UsersQuery): Promise<PaginatedResponse<Use
       sort: query.sort,
     },
   });
+  return data;
+};
+
+export const createUser = async (payload: CreateUserPayload): Promise<User> => {
+  const { data } = await axiosInstance.post<User>('/users', payload);
   return data;
 };
 

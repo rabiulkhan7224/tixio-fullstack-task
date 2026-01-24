@@ -6,6 +6,7 @@ export const createUserSchema = z.object({
   role: z.enum(['admin', 'editor', 'viewer'], {
     errorMap: () => ({ message: 'Please select a valid role' }),
   }),
+  password: z.string().min(8, 'Password must be at least 8 characters long'),
 });
 
 export type CreateUserFormData = z.infer<typeof createUserSchema>;

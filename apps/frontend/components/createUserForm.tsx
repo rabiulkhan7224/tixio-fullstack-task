@@ -11,8 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { CreateUserFormData, createUserSchema } from '@/lib/types/userSchema';
+import { useCreateUser } from '@/hooks/useCreateUser';
+import { toast } from 'sonner';
+import { AxiosError } from 'axios';
 
-import { createUserSchema, type CreateUserFormData } from '@/lib/schemas/userSchema';
 
 interface CreateUserFormProps {
   onSuccess?: () => void;
@@ -41,11 +44,25 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
   const onSubmit = (data: CreateUserFormData) => {
     mutate(data, {
       onSuccess: () => {
+        toast.success('User created successfully');
         reset();
         onSuccess?.();
       },
+     
+      onError: (error) => {
+            let errorMessage = 'Failed to create user. Please try again.';
+
+        if (error instanceof AxiosError) {
+          // Extract message from axios error response data
+          errorMessage = (error.response?.data as any)?.message || error.message || errorMessage;
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        toast.error(errorMessage);
+      },
     });
   };
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -85,6 +102,37 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
       </div>
 
       {/* Role Field */}
+
+      {/* password   */}
+        <div>
+        <label htmlFor="password" className="text-sm font-medium mb-2 block">
+            Password
+        </label>    
+        <Input
+            id="password"
+            type="password"
+            placeholder="Enter user password"
+            disabled={isPending || isSubmitting}
+            {...register('password')}
+            className={errors.password ? 'border-destructive' : ''}
+        />
+        {errors.password && (
+            <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
+        )}
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
       <div>
         <label htmlFor="role" className="text-sm font-medium mb-2 block">
           Role

@@ -1,4 +1,6 @@
 "use client";
+import { CreateUserForm } from "@/components/createUserForm";
+import { CreateUserModal } from "@/components/CreateUserModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,13 +11,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUsers } from "@/hooks/useUsers";
 import { useState } from "react";
 
 const HomePage = () => {
   const [role, setRole] = useState<string | null>(null);
   
-  
-  
+  const { data, isLoading, isError } = useUsers({
+    search: "",
+    page: 1,
+    limit: 10,
+    role: 'viewer',
+   
+  });
+  console.log(data)
+
   const handleRoleChange = (value: string) => {
     setRole(value === "all" ? null : value);
   };
@@ -28,7 +38,9 @@ const HomePage = () => {
             <h1 className="text-3xl font-bold tracking-tight">
               User Management
             </h1>
-            <Button>Add New User</Button>
+            <div className="">
+          <CreateUserModal />
+            </div>
           </div>
           {/* filter and search section */}
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">

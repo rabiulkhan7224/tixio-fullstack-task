@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { CreateUserFormData, createUserSchema } from './userSchema';
+import { useCreateUser } from '@/hooks/useCreateUser';
 
 
 
@@ -82,6 +83,23 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
         />
         {errors.email && (
           <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
+        )}
+      </div>
+      {/* password */}
+      <div>
+        <label htmlFor="password" className="text-sm font-medium mb-2 block">
+          Password
+        </label>
+        <Input
+          id="password"
+          type="password"
+          placeholder="Enter user password"
+          disabled={isPending || isSubmitting}
+          {...register('password')}
+          className={errors.password ? 'border-destructive' : ''}
+        />
+        {errors.password && (
+          <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
         )}
       </div>
 
