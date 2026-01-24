@@ -42,9 +42,10 @@ export class UsersService {
   }
 // get users 
   async getallUsers(query: FindUsersQueryDto): Promise<PaginatedUsers> {
-    const { search, role, page = 1, limit = 10 } = query;
+    const { search, role, page = 1, limit = 10, sort = 'asc' } = query;
 
     const where: any = {};
+    const orderBy: any = { name: sort };
 
     if (search) {
       where.OR = [{ name: { contains: search, mode: 'insensitive' } }];
@@ -71,7 +72,8 @@ export class UsersService {
           active: true,
           createdAt: true,
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy,
+       
       }),
     ]);
 

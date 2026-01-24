@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { User } from '@/lib/types/users';
 import { RoleBadge } from './RoleBadge';
+import { cn } from '@/lib/utils';
 
 interface UserListItemProps {
   user: User;
@@ -15,7 +16,7 @@ export function UserListItem({ user, isSelected, onSelect }: UserListItemProps) 
     <Button
       onClick={() => onSelect(user.id)}
       variant={isSelected ? 'default' : 'ghost'}
-      className="w-full justify-start h-auto py-3 px-4 flex flex-col items-start"
+      className={cn('w-full justify-start h-auto py-3 px-4 flex flex-col items-start hover:bg-gray-100', isSelected && 'bg-rose-100 text-foreground')}
     >
       <div className="flex w-full items-center justify-between">
         <span className="font-medium">{user.name}</span>

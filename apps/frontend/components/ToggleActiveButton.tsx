@@ -19,7 +19,8 @@ export function ToggleActiveButton({ userId, isActive }: ToggleActiveButtonProps
     <Button
       onClick={handleToggle}
       disabled={isPending}
-      variant={isActive ? 'default' : 'outline'}
+      className={isActive ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}
+      variant="outline"
       size="sm"
     >
       {isPending ? 'Updating...' : isActive ? 'Active' : 'Inactive'}

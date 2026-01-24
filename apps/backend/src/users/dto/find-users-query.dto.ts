@@ -31,6 +31,10 @@ export class FindUsersQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
+  @ApiPropertyOptional({ enum: ['asc', 'desc'], description: 'Sort by name order' })
+  @IsOptional()
+  @IsEnum(['asc', 'desc'])
+  sort?: 'asc' | 'desc' = 'asc';
 
   @ApiPropertyOptional({ enum: UserRole, description: 'Filter by role' })
   @IsOptional()

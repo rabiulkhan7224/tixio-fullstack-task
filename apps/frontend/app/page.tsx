@@ -28,7 +28,7 @@ const HomePage = () => {
     page,
     limit: 10,
     role,
-    // sort,
+    sort,
   };
 
   const { isLoading } = useUsers(query);
@@ -95,7 +95,13 @@ const HomePage = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button className="">Sort by Name</Button>
+           <Button
+              onClick={handleSortToggle}
+              disabled={isLoading}
+              variant="outline"
+            >
+              Sort by Name ({sort === 'asc' ? '↑' : '↓'})
+            </Button>
           </div>
           {/*  Dashboard user data layout  */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
