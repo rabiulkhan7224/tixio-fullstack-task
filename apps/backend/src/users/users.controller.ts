@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,45 +21,57 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiResponse({ status: 201, description: 'User created successfully' })
+  @ApiResponse({ status: 409, description: 'Email already in use' })
+  
+   async createuser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-@Get()
-  @ApiOperation({ summary: 'Get paginated list of users with search & role filter' })
+  @Get()
+  @ApiOperation({
+    summary: 'Get paginated list of users with search & role filter',
+  })
   @ApiQuery({ name: 'search', required: false })
-  @ApiQuery({ name: 'role', required: false, enum: ['admin', 'editor', 'viewer'] })
+  @ApiQuery({
+    name: 'role',
+    required: false,
+    enum: ['admin', 'editor', 'viewer'],
+  })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiResponse({ status: 200, description: 'Paginated users' })
-  async findAll(@Query() query: FindUsersQueryDto) {
-    return this.usersService.findAll(query);
+  
+  async getallUsers(@Query() query: FindUsersQueryDto) {
+    return this.usersService.getallUsers(query);
   }
-@ApiOperation({ summary: 'Get a single user by ID' })
-  @ApiParam({ name: 'id', description: 'User ID (UUID or CUID)' })
-  @ApiResponse({ status: 200, description: 'User found',  })
+  @ApiOperation({ summary: 'get a single user by ID' })
+  @ApiParam({ name: 'id', description: 'user ID ' })
+  @ApiResponse({ status: 200, description: 'User found' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  getUserbyId(@Param('id') id: string) {
+    return this.usersService.getUserbyId(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateUser(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  deleteUserbyId(@Param('id') id: string) {
+    return this.usersService.deleteUserbyId(id);
   }
-
 
   @Patch(':id/toggle-active')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Toggle user active status (true ↔ false)' })
   @ApiParam({ name: 'id', description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'Active status toggled', })
+  @ApiResponse({ status: 200, description: 'Active status toggled' })
   @ApiResponse({ status: 404, description: 'User not found' })
+
+
   async toggleActive(@Param('id') id: string) {
     return this.usersService.toggleActive(id);
   }

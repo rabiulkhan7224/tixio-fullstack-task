@@ -1,4 +1,5 @@
 "use client";
+import { CreateUserModal } from "@/components/CreateUserModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,16 +10,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { UserDetails } from "@/components/UserDetails";
+import { UserList } from "@/components/UserList";
+import { useUsers } from "@/hooks/useUsers";
+import { UserRole, UsersQuery } from "@/lib/types/users";
+import { useCallback, useState } from "react";
 
 const HomePage = () => {
-  const [role, setRole] = useState<string | null>(null);
-  
-  
-  
-  const handleRoleChange = (value: string) => {
-    setRole(value === "all" ? null : value);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [search, setSearch] = useState<string>('');
+  const [role, setRole] = useState<UserRole | undefined>(undefined);
+  const [sort, setSort] = useState<'asc' | 'desc'>('asc');
+  const [page, setPage] = useState<number>(1);
+
+  const query: UsersQuery = {
+    search: search || undefined,
+    page,
+    limit: 10,
+    role,
+    // sort,
   };
+
+  const { isLoading } = useUsers(query);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+    setPage(1); // Reset to first page on search
+  }, []);
+
+  const handleRoleChange = (value: string) => {
+    setRole(value === 'all' ? undefined : (value as UserRole));
+    setPage(1); // Reset to first page on filter change
+  };
+
+  const handleSortToggle = () => {
+    setSort(sort === 'asc' ? 'desc' : 'asc');
+  };
+
 
   return (
     <div className="min-h-screen bg-background ">
@@ -28,7 +56,9 @@ const HomePage = () => {
             <h1 className="text-3xl font-bold tracking-tight">
               User Management
             </h1>
-            <Button>Add New User</Button>
+            <div className="">
+          <CreateUserModal />
+            </div>
           </div>
           {/* filter and search section */}
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -66,7 +96,24 @@ const HomePage = () => {
             <Button className="">Sort by Name</Button>
           </div>
           {/*  Dashboard user data layout  */}
-          <div className=""></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Left Panel - Users List */}
+          <div className="md:col-span-1">
+            <div className="bg-card border border-border rounded-lg p-4">
+              <h2 className="text-lg font-semibold mb-4">Users</h2>
+              <UserList
+                query={query}
+                selectedUserId={selectedUserId}
+                onSelectUser={setSelectedUserId}
+              />
+            </div>
+          </div>
+
+          {/* Right Panel - User Details */}
+          <div className="md:col-span-2">
+            <UserDetails userId={selectedUserId} />
+          </div>
+        </div>
         </div>
       </div>
     </div>
