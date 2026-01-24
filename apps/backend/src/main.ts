@@ -7,6 +7,13 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+
+
+ app.enableCors({
+    origin: ['http://localhost:3000', 'https://frontend-production-97bc.up.railway.app'], 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
   // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
