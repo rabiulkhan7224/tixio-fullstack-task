@@ -61,27 +61,20 @@ const HomePage = () => {
             </div>
           </div>
           {/* filter and search section */}
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="flex-1">
-              <Label
-                htmlFor="search"
-                className="text-sm font-medium mb-2 block"
-              >
-                Search Users
-              </Label>
+              <label className="text-sm font-medium mb-2 block">Search users</label>
               <Input
-                type="text"
-                id="search"
-                placeholder="Search by name "
-                className=""
+                placeholder="Search by name or email..."
+                value={search}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                // disabled={isLoading}
               />
             </div>
 
-            <div className="w-full md:w-auto min-w-[180px] ">
-              <label className="text-sm font-medium mb-2 block">
-                Filter by role
-              </label>
-              <Select value={role || "all"} onValueChange={handleRoleChange}>
+            <div className="w-full md:w-auto min-w-[180px]">
+              <label className="text-sm font-medium mb-2 block">Filter by role</label>
+              <Select value={role || 'all'} onValueChange={handleRoleChange} disabled={isLoading}>
                 <SelectTrigger>
                   <SelectValue placeholder="All roles" />
                 </SelectTrigger>
@@ -93,10 +86,17 @@ const HomePage = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button className="">Sort by Name</Button>
+
+            <Button
+              onClick={handleSortToggle}
+              disabled={isLoading}
+              variant="outline"
+            >
+              Sort by Name ({sort === 'asc' ? '↑' : '↓'})
+            </Button>
           </div>
           {/*  Dashboard user data layout  */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
           {/* Left Panel - Users List */}
           <div className="md:col-span-1">
             <div className="bg-card border border-border rounded-lg p-4">
