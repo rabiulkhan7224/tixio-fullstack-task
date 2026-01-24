@@ -25,7 +25,7 @@ export interface UpdateUserPayload {
 
 export interface PaginatedResponse<T> {
   data: T[];
-  pagination: {
+  meta: {
     page: number;
     limit: number;
     total: number;
