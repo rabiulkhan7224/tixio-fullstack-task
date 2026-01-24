@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { UserDetails } from "@/components/UserDetails";
 import { UserList } from "@/components/UserList";
 import { useUsers } from "@/hooks/useUsers";
 import { UserRole, UsersQuery } from "@/lib/types/users";
@@ -109,9 +110,9 @@ const HomePage = () => {
           </div>
 
           {/* Right Panel - User Details */}
-          {/* <div className="md:col-span-2">
+          <div className="md:col-span-2">
             <UserDetails userId={selectedUserId} />
-          </div> */}
+          </div>
         </div>
         </div>
       </div>
